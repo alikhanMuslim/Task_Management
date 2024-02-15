@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/alikhanMuslim/Task_Management/pkg/dbs"
 	_ "github.com/lib/pq"
 )
 
@@ -28,11 +29,7 @@ func main() {
 	}
 	defer db.Close()
 
-	// Проверяем подключение
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println(dbs.GetTaskByID(db, 1))
 
 	fmt.Println("Успешное подключение к базе данных")
 }
