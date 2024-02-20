@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/alikhanMuslim/Task_Management/pkg/dbs"
 	_ "github.com/lib/pq"
 )
 
@@ -29,7 +28,20 @@ func main() {
 	}
 	defer db.Close()
 
-	fmt.Println(dbs.GetTaskByID(db, 1))
+	for {
+		fmt.Println("Task Manager Menu:")
+		fmt.Println("1. Add Task")
+		fmt.Println("2. View Tasks")
+		fmt.Println("3. Mark task as Complete")
+		fmt.Println("4. Remove Task")
+		fmt.Println("5. Exit")
 
-	fmt.Println("Успешное подключение к базе данных")
+		var choice int
+		fmt.Print("Enter your choice: ")
+		if _, err := fmt.Scan(&choice); err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
+	}
+
 }
