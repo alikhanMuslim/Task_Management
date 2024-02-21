@@ -1,11 +1,10 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
-	"log"
 
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 const (
@@ -16,32 +15,29 @@ const (
 	dbname   = "library"
 )
 
+type Book struct {
+	ID        uint `gorm:"primaryKey"`
+	Name      string
+	Price     uint
+	Available bool
+}
+
 func main() {
-	// Строка подключения
-	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	// Открываем подключение к базе данных
-	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	for {
-		fmt.Println("Task Manager Menu:")
-		fmt.Println("1. Add Task")
-		fmt.Println("2. View Tasks")
-		fmt.Println("3. Mark task as Complete")
-		fmt.Println("4. Remove Task")
-		fmt.Println("5. Exit")
-
-		var choice int
-		fmt.Print("Enter your choice: ")
-		if _, err := fmt.Scan(&choice); err != nil {
-			fmt.Println("Error reading input:", err)
-			continue
-		}
+		panic("failed to connect database")
 	}
 
+	db.AutoMigrate(&Book{})
+
+	db.Create(&Book{Name: "Abay zholy", Price: 5000, Available: true})
+
+	var book Book
+
+	db.First(&book, 1)
+
+	fmt.Print(book)
 }
